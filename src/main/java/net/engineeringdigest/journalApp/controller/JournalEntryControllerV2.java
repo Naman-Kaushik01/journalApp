@@ -31,7 +31,6 @@ private JournalEntryService journalEntryService;
     @PostMapping
     public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry myEntry) {
         try{
-            myEntry.setDate(LocalDateTime.now());
             journalEntryService.saveEntry(myEntry);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }catch(Exception e){
