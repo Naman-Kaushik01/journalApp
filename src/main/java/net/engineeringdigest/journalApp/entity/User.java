@@ -21,7 +21,7 @@ public class User {
 
     @Indexed(unique = true)
     @NonNull
-    private String username;
+    private String userName;
     @NonNull
     private String password;
     @DBRef
