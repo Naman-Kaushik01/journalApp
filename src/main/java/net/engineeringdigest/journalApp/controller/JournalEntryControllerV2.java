@@ -2,6 +2,7 @@ package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.entity.JournalEntry;
 import net.engineeringdigest.journalApp.service.JournalEntryService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +30,25 @@ private JournalEntryService journalEntryService;
     }
 
     @GetMapping("id/{myId}")
-    public JournalEntry getJournalEntryById(@PathVariable Long myId){
+    public JournalEntry getJournalEntryById(@PathVariable ObjectId myId){
 
-        return null;
+        return journalEntryService.findById(myId).orElse(null);
     }
     @DeleteMapping("id/{myId}")
-    public JournalEntry deleteJournalEntryById(@PathVariable Long myId){
+    public boolean deleteJournalEntryById(@PathVariable ObjectId myId){
 
-        return null;
+        journalEntryService.deleteById(myId);
+        return true;
     }
     @PutMapping("id/{myId}")
-    public JournalEntry updateJournalEntry(@PathVariable Long myId , @RequestBody JournalEntry myEntry) {
-      return null;
+    public JournalEntry updateJournalEntry(@PathVariable ObjectId myId , @RequestBody JournalEntry newEntry) {
+      JournalEntry old = journalEntryService.findById(myId).orElse(null);
+      if (old != null) {
+          old.setTitle(newEntry.getTitle()!=null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : old.getTitle());
+          old.setContent(newEntry.getContent()!=null && !newEntry.getContent().equals("") ? newEntry.getContent() : old.getContent());
+      }
+      journalEntryService.saveEntry(old);
+      return old;
     }
 
 
