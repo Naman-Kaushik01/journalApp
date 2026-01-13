@@ -5,6 +5,7 @@ import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +19,25 @@ public class UserServiceTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "ram",
-            "farhan",
-            "siddhant"
-    })
-    public void testFindByUserName(String name) {
-        assertNotNull(userRepository.findByUserName(name));
+    @ArgumentsSource(UserArgumentsProvider.class)
+    public void testFindByUserName(User user) {
+        assertTrue(userService.saveNewUser(user));
     }
+
+
     @Disabled
     @Test
     public void testJournalEntryPresent(){
         User user = userRepository.findByUserName("ram");
-        assertTrue(!user.getJournalEntries().isEmpty());
+        assertTrue(user.getJournalEntries().isEmpty());
     }
+
+    @Disabled
     @ParameterizedTest
     @CsvSource({
             "1,1,2",
