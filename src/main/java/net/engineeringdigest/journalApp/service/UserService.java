@@ -6,6 +6,8 @@ import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.JournalEntryRepository;
 import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +25,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public void saveEntry(User user) {
         try{
@@ -38,6 +41,8 @@ public class UserService {
             userRepository.save(user);
             return true;
         }catch (Exception e){
+            log.warn("User already exists");
+            log.debug("User already exists");
             return false;
         }
     }
@@ -57,6 +62,7 @@ public class UserService {
         userRepository.deleteById(myId);
     }
     public User findByUserName(String userName) {
+
         return userRepository.findByUserName(userName);
     }
 

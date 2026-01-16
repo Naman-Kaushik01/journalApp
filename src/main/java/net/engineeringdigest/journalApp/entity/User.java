@@ -1,9 +1,6 @@
 package net.engineeringdigest.journalApp.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.data.annotation.Id;
