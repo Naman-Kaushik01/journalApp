@@ -7,18 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class WeatherService {
-    private static final String apiKey = "7cc951e2f85da879566d1bed0d047ae7";
+    private static final String apiKey = "b13fd6108faeab56e7b9584fd709e739";
 
-    private static final String API = "http://api.weatherstack.com/current?access_key=API_KEY&query=CITY";
+    private static final String API = "http://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=API_KEY";
 
     @Autowired
     private RestTemplate restTemplate;
 
     public WeatherResponse getWeather(String city) {
         try {
-            String finalAPI = API.replace("CITY", city).replace("API_KEY", apiKey);
+            String finalAPI = API.replace("CITY", URLEncoder.encode(city, StandardCharsets.UTF_8))
+                    .replace("API_KEY", apiKey);
 
             ResponseEntity<WeatherResponse> response =
                     restTemplate.exchange(finalAPI, HttpMethod.GET, null, WeatherResponse.class);
@@ -26,10 +30,11 @@ public class WeatherService {
             return response.getBody();
 
         } catch (Exception e) {
-            e.printStackTrace();   // 🔥 THIS will show real cause in console
+            System.out.println("Weather API error: " + e.getMessage());
             return null;
         }
     }
+
 
 
 

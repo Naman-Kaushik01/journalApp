@@ -48,17 +48,23 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> greetings(){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        WeatherResponse weatherResponse = weatherService.getWeather("Mumbai");
-        if(weatherResponse == null){
-            return ResponseEntity.status(500).body("Weather API failed");
+
+        if(authentication == null || !authentication.isAuthenticated()){
+            return ResponseEntity.status(401).body("Unauthorized");
         }
-        String greetings = "";
-        
-        if(weatherResponse != null) {
-            greetings = ", weather feels like "+weatherResponse.getCurrent().getFeelslike();
+
+        WeatherResponse weatherResponse = weatherService.getWeather("Delhi");
+
+        if(weatherResponse == null || weatherResponse.getMain() == null){
+            return ResponseEntity.status(500).body("Weather service unavailable");
         }
-        return new ResponseEntity<>("Hii "+ authentication.getName()+ greetings() ,HttpStatus.OK);
+
+        String greetings = ", weather feels like "
+                + weatherResponse.getMain().getFeelsLike();
+
+        return ResponseEntity.ok("Hii " + authentication.getName() + greetings);
     }
 
 
