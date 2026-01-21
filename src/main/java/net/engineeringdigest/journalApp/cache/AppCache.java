@@ -18,10 +18,11 @@ public enum keys{
     @Autowired
     private ConfigJournalAppRepository configJournalAppRepository;
 
-    public Map<String , String > AppCache = new HashMap<>();
+    public Map<String , String > AppCache;
 
     @PostConstruct
     public void init(){
+        AppCache = new HashMap<>();
         List<ConfigJournalAppEntity> all = configJournalAppRepository.findAll();
         for(ConfigJournalAppEntity app : all){
             AppCache.put(app.getKey(), app.getValue());
