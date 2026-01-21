@@ -27,7 +27,7 @@ public class WeatherService {
 
     public WeatherResponse getWeather(String city) {
         try {
-            String apiTemplate = appCache.APP_CACHE.get("weather_api");
+            String apiTemplate = appCache.AppCache.get("WEATHER_API");
 
             if(apiTemplate == null){
                 throw new RuntimeException("Weather API not found in cache");
