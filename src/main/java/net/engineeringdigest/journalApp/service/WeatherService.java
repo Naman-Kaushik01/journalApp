@@ -1,6 +1,7 @@
 package net.engineeringdigest.journalApp.service;
 
 import net.engineeringdigest.journalApp.api.WeatherResponse;
+import net.engineeringdigest.journalApp.cache.AppCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -16,15 +17,27 @@ public class WeatherService {
     @Value("${weather.api.key}")
     private  String apiKey;
 
-    private static final String API = "http://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=API_KEY";
+    //private static final String API = "http://api.openweathermap.org/data/2.5/weather?q=CITY&appid=API_KEY";
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AppCache appCache;
+
     public WeatherResponse getWeather(String city) {
         try {
-            String finalAPI = API.replace("CITY", URLEncoder.encode(city, StandardCharsets.UTF_8))
+            String apiTemplate = appCache.APP_CACHE.get("weather_api");
+
+            if(apiTemplate == null){
+                throw new RuntimeException("Weather API not found in cache");
+            }
+
+            String finalAPI = apiTemplate
+                    .replace("CITY", URLEncoder.encode(city, StandardCharsets.UTF_8))
                     .replace("API_KEY", apiKey);
+
+            System.out.println("Calling API: " + finalAPI);
 
             ResponseEntity<WeatherResponse> response =
                     restTemplate.exchange(finalAPI, HttpMethod.GET, null, WeatherResponse.class);
@@ -32,10 +45,11 @@ public class WeatherService {
             return response.getBody();
 
         } catch (Exception e) {
-            System.out.println("Weather API error: " + e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
+
 
 
 
