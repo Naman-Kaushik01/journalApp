@@ -27,6 +27,5 @@ public enum keys{
         for(ConfigJournalAppEntity app : all){
             AppCache.put(app.getKey(), app.getValue());
         }
-
     }
 }
