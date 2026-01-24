@@ -19,7 +19,7 @@ public class UserRepositoryImpl {
         query.addCriteria(Criteria.where("email").regex("^[A-za-z0-9.%+-]+@[A-za-z0-9-]+\\.[A-za-z0-9-]+$"));
         query.addCriteria(Criteria.where("sentimentAnalysis").is(true));
         List<User> users = mongoTemplate.find(query, User.class);
-        return users;
+        return  users;
 
     }
 }
