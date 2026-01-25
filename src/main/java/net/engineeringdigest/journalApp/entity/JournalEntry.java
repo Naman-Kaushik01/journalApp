@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 
 @Document(collection = "journal_entries")
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class JournalEntry {
     @Id
@@ -18,6 +20,6 @@ public class JournalEntry {
      private String title;
      private String content;
      private LocalDateTime date;
-     private Sentiment sentiment;
+    private Sentiment sentiment;
 
 }
