@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,22 +27,39 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
-    @Transactional
-    public void saveEntry(JournalEntry journalEntry, String userName) {
-           try {
-               User user = userService.findByUserName(userName);
-               journalEntry.setDate(LocalDateTime.now());
-               JournalEntry saved = journalEntryRepository.save(journalEntry);
-               user.getJournalEntries().add(saved);
-               userService.saveEntry(user);
-           }catch(Exception e) {
-               throw new RuntimeException("Could not save journal entry", e);
-           }
+//    @Transactional
+//    public void saveEntry(JournalEntry journalEntry, String userName) {
+//           try {
+//               User user = userService.findByUserName(userName);
+//
+//               if(user.getJournalEntries() == null){
+//                   user.setJournalEntries(new ArrayList<>());
+//               }
+//               journalEntry.setDate(LocalDateTime.now());
+//               JournalEntry saved = journalEntryRepository.save(journalEntry);
+//               user.getJournalEntries().add(saved);
+//               userService.saveEntry(user);
+//           }catch(Exception e) {
+//               throw new RuntimeException("Could not save journal entry", e);
+//           }
+//    }
+@Transactional
+public void saveEntry(JournalEntry journalEntry, String userName) {
+    try {
+        User user = userService.findByUserName(userName);
+        journalEntry.setDate(LocalDateTime.now());
+        JournalEntry saved = journalEntryRepository.save(journalEntry);
+        user.getJournalEntries().add(saved);
+        userService.saveNewUser(user);
+    } catch (Exception e) {
+        throw new RuntimeException("An error occurred while saving the entry.", e);
     }
-    public void saveEntry(JournalEntry journalEntry) {
-       journalEntryRepository.save(journalEntry);
+}
 
+    public void saveEntry(JournalEntry journalEntry) {
+        journalEntryRepository.save(journalEntry);
     }
+
 
     public List<JournalEntry> getAll() {
         return journalEntryRepository.findAll();

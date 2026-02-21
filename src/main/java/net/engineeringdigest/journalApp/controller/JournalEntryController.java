@@ -6,6 +6,7 @@ import net.engineeringdigest.journalApp.service.JournalEntryService;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,17 +38,33 @@ private UserService userService;
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+
+
+//    @PostMapping
+//    public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry myEntry) {
+//        try{
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            String userName = authentication.getName();
+//            journalEntryService.saveEntry(myEntry , userName);
+//            return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
+//        }catch(Exception e){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
     @PostMapping
-    public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry myEntry) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        try{
-            journalEntryService.saveEntry(myEntry , userName);
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
+            journalEntryService.saveEntry(myEntry, userName);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @GetMapping("id/{myId}")
     public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable ObjectId myId){
@@ -102,8 +119,5 @@ private UserService userService;
 
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
 
 }
